@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  /* Premium Dark Theme Palette */
+  --color-background: #050505;
+  --color-foreground: #fafafa;
+  --color-surface: #111111;
+  --color-surface-hover: #1a1a1a;
+  --color-border: #222222;
+  --color-primary: #00f0ff; /* Neon Cyan */
+  --color-primary-glow: rgba(0, 240, 255, 0.4);
+  --color-secondary: #b026ff; /* Electric Purple */
+  --color-muted: #737373;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    @apply antialiased font-sans selection:bg-primary/30 selection:text-primary;
+  }
+}
+
+/* Custom utility for glassmorphism */
+@layer utilities {
+  .glass {
+    @apply bg-surface/60 backdrop-blur-md border border-white/5;
+  }
+}
