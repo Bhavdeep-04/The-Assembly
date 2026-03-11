@@ -8,6 +8,7 @@ export interface IOrderItem {
 }
 
 export interface IOrder {
+  userId?: mongoose.Types.ObjectId | string;
   items: IOrderItem[];
   totalPrice: number;
   razorpayOrderId: string;
@@ -25,6 +26,7 @@ const OrderItemSchema = new Schema<IOrderItem>({
 });
 
 const OrderSchema = new Schema<IOrder>({
+  userId: { type: Schema.Types.ObjectId, ref: 'User' },
   items: [OrderItemSchema],
   totalPrice: { type: Number, required: true },
   razorpayOrderId: { type: String, required: true },

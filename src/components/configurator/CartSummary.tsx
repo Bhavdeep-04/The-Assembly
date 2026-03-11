@@ -5,8 +5,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Trash2, ShoppingCart, ArrowRight } from "lucide-react";
 import { Button } from "../ui/Button";
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export function CartSummary() {
+  const { data: session } = useSession();
+  const router = useRouter();
   const { items, removeItem, getTotalPrice, clearCart } = useCartStore();
   const totalPrice = getTotalPrice();
   const [isProcessing, setIsProcessing] = useState(false);
@@ -24,6 +28,11 @@ export function CartSummary() {
   };
 
   const handleCheckout = async () => {
+    if (!session) {
+      router.push("/login");
+      return;
+    }
+
     try {
       setIsProcessing(true);
       const isLoaded = await loadRazorpayScript();

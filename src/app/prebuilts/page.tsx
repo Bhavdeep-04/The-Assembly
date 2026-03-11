@@ -1,10 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Metadata } from "next";
 import { ShoppingCart, Zap, Cpu, Gamepad2, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useCartStore } from "@/store/useCartStore";
+import Image from "next/image";
 
 const prebuilts = [
   {
@@ -13,6 +13,7 @@ const prebuilts = [
     tagline: "Ultimate 4K Gaming Powerhouse",
     icon: <Gamepad2 className="w-8 h-8" />,
     color: "primary",
+    image: "/prebuilt_apex_dominator.png",
     specs: [
       { label: "CPU", value: "AMD Ryzen 9 7950X" },
       { label: "GPU", value: "NVIDIA RTX 4090 24GB" },
@@ -30,6 +31,7 @@ const prebuilts = [
     tagline: "High-Performance 1440p Gaming Rig",
     icon: <Zap className="w-8 h-8" />,
     color: "secondary",
+    image: "/prebuilt_velocity_pro.png",
     specs: [
       { label: "CPU", value: "Intel Core i7-14700K" },
       { label: "GPU", value: "NVIDIA RTX 4070 Ti" },
@@ -47,6 +49,7 @@ const prebuilts = [
     tagline: "Creator & Workstation Beast",
     icon: <Cpu className="w-8 h-8" />,
     color: "blue-400",
+    image: "/prebuilt_studio_titan.png",
     specs: [
       { label: "CPU", value: "AMD Threadripper 7960X" },
       { label: "GPU", value: "NVIDIA RTX 4080 Super" },
@@ -64,6 +67,7 @@ const prebuilts = [
     tagline: "1080p Competitive Gaming Value Build",
     icon: <Briefcase className="w-8 h-8" />,
     color: "green-400",
+    image: "/prebuilt_entry_striker.png",
     specs: [
       { label: "CPU", value: "AMD Ryzen 5 7600X" },
       { label: "GPU", value: "NVIDIA RTX 4060 Ti" },
@@ -77,11 +81,35 @@ const prebuilts = [
   },
 ];
 
-const colorMap: Record<string, { bg: string; text: string; border: string; glow: string }> = {
-  primary: { bg: "bg-primary/10", text: "text-primary", border: "border-primary/30 hover:border-primary/60", glow: "drop-shadow-[0_0_12px_rgba(0,240,255,0.5)]" },
-  secondary: { bg: "bg-secondary/10", text: "text-secondary", border: "border-secondary/30 hover:border-secondary/60", glow: "drop-shadow-[0_0_12px_rgba(176,38,255,0.5)]" },
-  "blue-400": { bg: "bg-blue-400/10", text: "text-blue-400", border: "border-blue-400/30 hover:border-blue-400/60", glow: "drop-shadow-[0_0_12px_rgba(96,165,250,0.5)]" },
-  "green-400": { bg: "bg-green-400/10", text: "text-green-400", border: "border-green-400/30 hover:border-green-400/60", glow: "drop-shadow-[0_0_12px_rgba(74,222,128,0.5)]" },
+const colorMap: Record<string, { bg: string; text: string; border: string; glow: string; badgeBg: string }> = {
+  primary: {
+    bg: "bg-primary/10",
+    text: "text-primary",
+    border: "border-primary/30 hover:border-primary/60",
+    glow: "drop-shadow-[0_0_12px_rgba(0,240,255,0.5)]",
+    badgeBg: "bg-primary/20",
+  },
+  secondary: {
+    bg: "bg-secondary/10",
+    text: "text-secondary",
+    border: "border-secondary/30 hover:border-secondary/60",
+    glow: "drop-shadow-[0_0_12px_rgba(176,38,255,0.5)]",
+    badgeBg: "bg-secondary/20",
+  },
+  "blue-400": {
+    bg: "bg-blue-400/10",
+    text: "text-blue-400",
+    border: "border-blue-400/30 hover:border-blue-400/60",
+    glow: "drop-shadow-[0_0_12px_rgba(96,165,250,0.5)]",
+    badgeBg: "bg-blue-400/20",
+  },
+  "green-400": {
+    bg: "bg-green-400/10",
+    text: "text-green-400",
+    border: "border-green-400/30 hover:border-green-400/60",
+    glow: "drop-shadow-[0_0_12px_rgba(74,222,128,0.5)]",
+    badgeBg: "bg-green-400/20",
+  },
 };
 
 export default function PreBuiltsPage() {
@@ -92,7 +120,7 @@ export default function PreBuiltsPage() {
       id: pb.id,
       name: pb.name,
       price: pb.price,
-      category: "Processor" as any, // Pre-Builts don't map to a single category
+      category: "Processor" as any,
       specs: Object.fromEntries(pb.specs.map((s) => [s.label, s.value])),
       description: pb.tagline,
     });
@@ -116,11 +144,11 @@ export default function PreBuiltsPage() {
           Pre-Built Systems
         </h1>
         <p className="text-muted text-lg max-w-2xl mx-auto">
-          Don't want to configure from scratch? Our experts have hand-picked the best component combinations for every use case.
+          Don&apos;t want to configure from scratch? Our experts have hand-picked the best component combinations for every use case.
         </p>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
         {prebuilts.map((pb, i) => {
           const c = colorMap[pb.color];
           return (
@@ -129,44 +157,62 @@ export default function PreBuiltsPage() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1, type: "spring", stiffness: 200 }}
-              className={`glass rounded-2xl p-6 border ${c.border} transition-colors group`}
+              className={`glass rounded-2xl border ${c.border} transition-colors group overflow-hidden flex flex-col`}
             >
-              <div className="flex items-start justify-between mb-5">
-                <div className={`p-3 rounded-xl ${c.bg} ${c.text} ${c.glow}`}>
-                  {pb.icon}
-                </div>
-                <span className={`text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full ${c.bg} ${c.text}`}>
+              {/* PC Image */}
+              <div className="relative w-full h-56 overflow-hidden">
+                <Image
+                  src={pb.image}
+                  alt={pb.name}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+                {/* Gradient overlay at the bottom so image blends into the card */}
+                <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/30 to-transparent" />
+                {/* Badge on image */}
+                <span className={`absolute top-4 right-4 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full ${c.badgeBg} ${c.text} backdrop-blur-sm border border-white/10`}>
                   {pb.badge}
                 </span>
               </div>
 
-              <h2 className="text-2xl font-black text-white mb-1">{pb.name}</h2>
-              <p className={`text-sm font-medium mb-5 ${c.text}`}>{pb.tagline}</p>
-
-              <div className="space-y-2 mb-6">
-                {pb.specs.map((s) => (
-                  <div key={s.label} className="flex justify-between text-sm">
-                    <span className="text-muted">{s.label}</span>
-                    <span className="text-white/80 font-medium">{s.value}</span>
+              {/* Card Content */}
+              <div className="p-6 flex flex-col flex-1">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className={`p-2 rounded-xl ${c.bg} ${c.text} ${c.glow} shrink-0`}>
+                    {pb.icon}
                   </div>
-                ))}
-              </div>
-
-              <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                <div>
-                  <p className="text-xs text-muted mb-1">Starting at</p>
-                  <p className={`text-2xl font-black ${c.text}`}>
-                    ₹{pb.price.toLocaleString("en-IN")}
-                  </p>
+                  <div>
+                    <h2 className="text-2xl font-black text-white leading-tight">{pb.name}</h2>
+                    <p className={`text-sm font-medium ${c.text}`}>{pb.tagline}</p>
+                  </div>
                 </div>
-                <Button
-                  variant="primary"
-                  className="flex items-center gap-2"
-                  onClick={() => handleAddToCart(pb)}
-                >
-                  <ShoppingCart className="w-4 h-4" />
-                  Add to Cart
-                </Button>
+
+                <div className="space-y-2 mb-6 bg-surface/50 rounded-xl p-4 border border-white/5">
+                  {pb.specs.map((s) => (
+                    <div key={s.label} className="flex justify-between text-sm">
+                      <span className="text-muted">{s.label}</span>
+                      <span className="text-white/80 font-medium font-mono">{s.value}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex items-center justify-between pt-4 border-t border-white/10 mt-auto">
+                  <div>
+                    <p className="text-xs text-muted mb-1">Starting at</p>
+                    <p className={`text-2xl font-black ${c.text}`}>
+                      ₹{pb.price.toLocaleString("en-IN")}
+                    </p>
+                  </div>
+                  <Button
+                    variant="primary"
+                    className="flex items-center gap-2"
+                    onClick={() => handleAddToCart(pb)}
+                  >
+                    <ShoppingCart className="w-4 h-4" />
+                    Add to Cart
+                  </Button>
+                </div>
               </div>
             </motion.div>
           );

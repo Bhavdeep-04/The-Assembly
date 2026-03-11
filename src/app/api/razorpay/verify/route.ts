@@ -2,9 +2,21 @@ import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import connectToDatabase from '@/lib/db';
 import Order from '@/models/Order';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
 export async function POST(req: Request) {
   try {
+    const session = await getServerSession(authOptions);
+    
+    // We expect a user to be logged in for checking out based on the prompt instructions
+    if (!session || !session.user || !session.user.id) {
+       return NextResponse.json(
+        { error: 'Unauthorized. You must be logged in to test this checkout flow.' },
+        { status: 401 }
+      );
+    }
+
     const {
       razorpay_order_id,
       razorpay_payment_id,
@@ -24,6 +36,7 @@ export async function POST(req: Request) {
       await connectToDatabase();
       
       const newOrder = new Order({
+        userId: session.user.id,
         items,
         totalPrice,
         razorpayOrderId: razorpay_order_id,
@@ -51,3 +64,4 @@ export async function POST(req: Request) {
     );
   }
 }
+

@@ -59,6 +59,11 @@ export default function Home() {
               <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out" />
             </Button>
           </Link>
+          <Link href="/login" className="w-full sm:w-auto">
+            <Button variant="outline" size="lg" className="w-full sm:w-auto hover:border-white/20">
+              Sign In & Save
+            </Button>
+          </Link>
         </motion.div>
 
         <motion.div variants={itemVariants} className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 w-full text-left">
