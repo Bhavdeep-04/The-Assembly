@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Category } from "@/data/products";
-import { Cpu, MemoryStick, HardDrive, Fan, Zap, Box, CircuitBoard } from "lucide-react";
+import { Cpu, MemoryStick, HardDrive, Fan, Zap, Box, CircuitBoard, LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface CategoryListProps {
@@ -10,7 +10,7 @@ interface CategoryListProps {
   onSelectCategory: (category: Category) => void;
 }
 
-const categories: { name: Category; icon: React.ElementType }[] = [
+const categories: { name: Category; icon: LucideIcon }[] = [
   { name: 'Motherboard', icon: CircuitBoard },
   { name: 'Processor', icon: Cpu },
   { name: 'RAM', icon: MemoryStick },
