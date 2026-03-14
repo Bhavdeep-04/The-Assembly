@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { ArrowRight, Zap, Target, Cpu } from "lucide-react";
+import { Hero3D } from "@/components/Hero3D";
 
 export default function Home() {
   const containerVariants = {
@@ -17,7 +18,8 @@ export default function Home() {
   };
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center relative overflow-hidden px-4 min-h-[calc(100vh-64px)] pb-24 pt-12">
+    <>
+      <div className="flex-1 flex flex-col items-center justify-center relative overflow-hidden px-4 min-h-[calc(100vh-64px)] pb-24 pt-12">
       {/* Abstract Background Elements */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -left-40 w-96 h-96 bg-primary/20 rounded-full blur-[100px]" />
@@ -91,5 +93,7 @@ export default function Home() {
         </motion.div>
       </motion.div>
     </div>
+    <Hero3D />
+    </>
   );
 }
