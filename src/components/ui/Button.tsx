@@ -5,32 +5,31 @@ import { motion, HTMLMotionProps } from "framer-motion";
 import React from "react";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "outline" | "ghost";
+  variant?: "primary" | "ghost" | "outline" | "secondary";
   size?: "sm" | "md" | "lg";
   children: React.ReactNode;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = "primary", size = "md", children, ...props }, ref) => {
-    
-    // We omit Framer motion specific props from being passed to the React.forwardRef
-    // But we let standard button props pass through, so we cast ...props back to HTMLMotionProps
-    
     return (
       <motion.button
         ref={ref}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
+        whileTap={{ scale: 0.97 }}
         className={cn(
-          "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+          "relative inline-flex items-center justify-center whitespace-nowrap font-medium tracking-[0.1em] uppercase text-xs overflow-hidden transition-colors duration-300 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-30",
           {
-            "bg-primary text-black hover:bg-primary/90 shadow-[0_0_15px_rgba(0,240,255,0.3)]": variant === "primary",
-            "bg-secondary text-white hover:bg-secondary/90 shadow-[0_0_15px_rgba(176,38,255,0.3)]": variant === "secondary",
-            "border border-border bg-surface hover:bg-surface-hover text-foreground": variant === "outline",
-            "hover:bg-surface-hover text-foreground": variant === "ghost",
-            "h-9 px-3": size === "sm",
-            "h-10 px-4 py-2": size === "md",
-            "h-11 px-8": size === "lg",
+            // Ghost platinum — default look
+            "border border-silver/30 text-silver/80 hover:text-white hover:border-silver/60 px-8 py-3.5 before:absolute before:inset-0 before:bg-silver/5 before:scale-x-0 before:origin-left hover:before:scale-x-100 before:transition-transform before:duration-500": variant === "primary",
+            // Outline — slightly dimmer
+            "border border-white/10 text-white/50 hover:text-white hover:border-white/30 px-6 py-3": variant === "outline",
+            // Secondary — very quiet
+            "text-white/30 hover:text-white/70 px-4 py-2": variant === "secondary",
+            // Ghost
+            "text-white/40 hover:text-white/80 hover:bg-white/5 px-4 py-2": variant === "ghost",
+            // Sizes
+            "text-[10px] px-4 py-2": size === "sm",
+            "px-8 py-3.5": size === "lg",
           },
           className
         )}

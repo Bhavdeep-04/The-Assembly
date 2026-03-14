@@ -2,84 +2,99 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ShoppingCart, Cpu, User, LogOut } from "lucide-react";
+import { ShoppingCart, LogOut, User } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 import { useCartStore } from "@/store/useCartStore";
 import { useState, useEffect } from "react";
-import { Button } from "./ui/Button";
 
 export function Navbar() {
   const { data: session } = useSession();
   const cartItemsCount = useCartStore((state) => state.getTotalItems());
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <motion.header
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="sticky top-0 z-50 w-full border-b border-white/5 glass"
+      initial={{ y: -80, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      className={`sticky top-0 z-50 w-full transition-all duration-500 ${
+        scrolled
+          ? "border-b border-white/[0.06] bg-background/90 backdrop-blur-xl"
+          : "border-b border-white/[0.04]"
+      }`}
     >
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-            <Cpu className="w-6 h-6 text-primary" />
-          </div>
-          <span className="font-bold text-xl tracking-tight text-white group-hover:text-primary transition-colors">
+      <div className="container mx-auto px-6 h-14 flex items-center justify-between">
+        {/* Wordmark */}
+        <Link href="/" className="group">
+          <span className="font-display text-xl font-light tracking-[0.15em] uppercase metallic-text">
             The Assembly
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-6 absolute left-1/2 -translate-x-1/2">
-          <Link href="/build" className="text-sm font-medium text-muted hover:text-white transition-colors">
-            Configurator
-          </Link>
-          <Link href="/prebuilts" className="text-sm font-medium text-muted hover:text-white transition-colors">
-            Pre-Builts
-          </Link>
-          <Link href="/support" className="text-sm font-medium text-muted hover:text-white transition-colors">
-            Support
-          </Link>
+        {/* Center nav */}
+        <nav className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
+          {[
+            { label: "Configurator", href: "/build" },
+            { label: "Pre-Builts", href: "/prebuilts" },
+            { label: "Support", href: "/support" },
+          ].map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="text-xs font-medium tracking-[0.12em] uppercase text-white/40 hover:text-white/90 transition-colors duration-300"
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
 
-        <div className="flex items-center gap-4">
+        {/* Right side */}
+        <div className="flex items-center gap-5">
           {session ? (
-            <div className="flex items-center gap-4 mr-2">
-              <span className="text-sm font-medium text-white hidden sm:block">
-                {session.user?.name?.split(' ')[0]}
+            <>
+              <span className="hidden sm:block text-xs tracking-widest uppercase text-white/40">
+                {session.user?.name?.split(" ")[0]}
               </span>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => signOut({ callbackUrl: '/' })}
-                className="text-muted hover:text-white hover:bg-white/5"
+              <button
+                onClick={() => signOut({ callbackUrl: "/" })}
+                className="text-xs tracking-widest uppercase text-white/40 hover:text-white/80 transition-colors flex items-center gap-1.5"
               >
-                <LogOut className="w-4 h-4 mr-2" />
-                Sign Out
-              </Button>
-            </div>
+                <LogOut className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Out</span>
+              </button>
+            </>
           ) : (
-            <Link href="/login">
-              <Button variant="ghost" size="sm" className="hidden sm:inline-flex text-muted hover:text-white hover:bg-white/5">
-                <User className="w-4 h-4 mr-2" />
-                <span className="text-sm">Log In</span>
-              </Button>
+            <Link
+              href="/login"
+              className="text-xs tracking-widest uppercase text-white/40 hover:text-white/80 transition-colors hidden sm:flex items-center gap-1.5"
+            >
+              <User className="w-3.5 h-3.5" />
+              Log In
             </Link>
           )}
-          <Link href="/build">
-            <Button variant="outline" size="sm" className="relative h-10 w-10 p-0 rounded-full border-white/10">
-              <ShoppingCart className="w-5 h-5" />
-              {mounted && cartItemsCount > 0 && (
-                <motion.span
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="absolute -top-1 -right-1 bg-primary text-black text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full"
-                >
-                  {cartItemsCount}
-                </motion.span>
-              )}
-            </Button>
+
+          {/* Cart */}
+          <Link href="/build" className="relative group">
+            <div className="w-8 h-8 flex items-center justify-center border border-silver/20 group-hover:border-silver/50 transition-colors duration-300">
+              <ShoppingCart className="w-3.5 h-3.5 text-silver/60 group-hover:text-silver transition-colors" />
+            </div>
+            {mounted && cartItemsCount > 0 && (
+              <motion.span
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="absolute -top-1.5 -right-1.5 bg-silver text-background text-[9px] font-bold w-4 h-4 flex items-center justify-center"
+              >
+                {cartItemsCount}
+              </motion.span>
+            )}
           </Link>
         </div>
       </div>

@@ -1,99 +1,182 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/Button";
-import { ArrowRight, Zap, Target, Cpu } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Hero3D } from "@/components/Hero3D";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const FEATURES = [
+  {
+    index: "01",
+    title: "Premium Selection",
+    body: "Curated components from the world's elite manufacturers — each part hand-validated for peak performance.",
+  },
+  {
+    index: "02",
+    title: "Guaranteed Compatibility",
+    body: "Our logic engine cross-references every part combination in real time so your build is always flawless.",
+  },
+  {
+    index: "03",
+    title: "Instant Checkout",
+    body: "Review your bespoke configuration and complete your order in seconds through our secure payment flow.",
+  },
+];
 
 export default function Home() {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
-  };
+  const heroRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const subRef = useRef<HTMLParagraphElement>(null);
+  const ctaRef = useRef<HTMLDivElement>(null);
+  const featuresRef = useRef<HTMLDivElement>(null);
+  const ruleRef = useRef<HTMLDivElement>(null);
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 200, damping: 20 } },
-  };
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Hero entrance — stagger from below with skew
+      const headerTl = gsap.timeline({ defaults: { ease: "expo.out", duration: 1.2 } });
+      headerTl
+        .from(ruleRef.current, { scaleX: 0, transformOrigin: "left", duration: 0.8, ease: "power3.out" })
+        .from(headingRef.current, { y: 60, skewY: 2, opacity: 0 }, "-=0.4")
+        .from(subRef.current, { y: 30, opacity: 0 }, "-=0.7")
+        .from(ctaRef.current, { y: 20, opacity: 0 }, "-=0.6");
+
+      // Feature cards scroll reveal
+      gsap.utils.toArray<HTMLDivElement>(".feature-card").forEach((card, i) => {
+        gsap.from(card, {
+          y: 50,
+          opacity: 0,
+          skewY: 1,
+          ease: "expo.out",
+          duration: 1.0,
+          scrollTrigger: {
+            trigger: card,
+            start: "top 85%",
+            toggleActions: "play none none none",
+          },
+          delay: i * 0.08,
+        });
+      });
+
+      // Section heading reveals
+      gsap.utils.toArray<HTMLElement>(".reveal-heading").forEach((el) => {
+        gsap.from(el, {
+          y: 40,
+          opacity: 0,
+          skewY: 1.5,
+          ease: "expo.out",
+          duration: 1.0,
+          scrollTrigger: {
+            trigger: el,
+            start: "top 88%",
+            toggleActions: "play none none none",
+          },
+        });
+      });
+
+    }, heroRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <>
-      <div className="flex-1 flex flex-col items-center justify-center relative overflow-hidden px-4 min-h-[calc(100vh-64px)] pb-24 pt-12">
-      {/* Abstract Background Elements */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -left-40 w-96 h-96 bg-primary/20 rounded-full blur-[100px]" />
-        <div className="absolute top-1/2 right-1/4 w-[500px] h-[500px] bg-secondary/10 rounded-full blur-[120px] translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-0 left-1/3 w-80 h-80 bg-blue-500/10 rounded-full blur-[100px]" />
-      </div>
+    <div ref={heroRef as any}>
+      {/* ─── HERO ────────────────────────────────────────────── */}
+      <section className="relative min-h-[calc(100vh-56px)] flex flex-col justify-center overflow-hidden px-6 md:px-16 lg:px-24">
+        {/* Subtle noise/grain overlay */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.025]"
+          style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")", backgroundSize: "256px" }} />
 
-      <motion.div
-        className="z-10 w-full max-w-5xl mx-auto text-center flex flex-col items-center"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8 border-primary/20">
-          <Zap className="w-4 h-4 text-primary" />
-          <span className="text-sm font-medium tracking-wide uppercase text-white/80">Next-Gen PC Building Experience</span>
-        </motion.div>
+        {/* Thin platinum horizontal rule */}
+        <div ref={ruleRef} className="w-16 h-px bg-silver/40 mb-10 origin-left" />
 
-        <motion.h1 
-          variants={itemVariants} 
-          className="text-5xl md:text-7xl font-black tracking-tighter mb-6 bg-clip-text text-transparent bg-gradient-to-br from-white via-white to-white/40 leading-tight"
+        {/* Eyebrow */}
+        <p className="text-[10px] tracking-[0.3em] uppercase text-silver/50 mb-6 font-medium">
+          Bespoke PC Configuration Studio
+        </p>
+
+        {/* Main heading — cinematic */}
+        <h1
+          ref={headingRef}
+          className="font-display font-light text-[clamp(3.5rem,9vw,9rem)] leading-[0.92] tracking-[-0.02em] text-white max-w-4xl"
         >
-          Forge Your <br className="hidden md:block" /> Ultimate Machine
-        </motion.h1>
+          Forge Your <br />
+          <span className="metallic-text italic">Ultimate&nbsp;Machine</span>
+        </h1>
 
-        <motion.p 
-          variants={itemVariants}
-          className="text-lg md:text-xl text-muted max-w-2xl mx-auto mb-10 leading-relaxed"
+        <p
+          ref={subRef}
+          className="mt-10 text-base md:text-lg text-white/40 max-w-lg leading-relaxed font-light"
         >
-          The Assembly is a boutique hardware configurator. Select premium parts, ensure compatibility, and build a masterpiece tailored precisely to your needs.
-        </motion.p>
+          The Assembly is a boutique hardware configurator. Select premium parts,
+          ensure compatibility, and build a masterpiece tailored precisely to your vision.
+        </p>
 
-        <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center gap-4 w-full justify-center max-w-md mx-auto">
-          <Link href="/build" className="w-full sm:w-auto">
-            <Button size="lg" className="w-full sm:w-auto group relative overflow-hidden">
-              <span className="relative z-10 flex items-center">
-                Start Building <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </span>
-              <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out" />
-            </Button>
+        {/* CTA row */}
+        <div ref={ctaRef} className="mt-12 flex flex-wrap items-center gap-6">
+          <Link href="/build" className="ghost-btn group">
+            Begin Configuration
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
           </Link>
-          <Link href="/login" className="w-full sm:w-auto">
-            <Button variant="outline" size="lg" className="w-full sm:w-auto hover:border-white/20">
-              Sign In & Save
-            </Button>
+          <Link
+            href="/prebuilts"
+            className="flex items-center gap-2 text-xs tracking-[0.12em] uppercase text-white/30 hover:text-white/70 transition-colors"
+          >
+            View Pre-Builts
+            <ArrowUpRight className="w-3 h-3" />
           </Link>
-        </motion.div>
+        </div>
 
-        <motion.div variants={itemVariants} className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 w-full text-left">
-          <div className="glass p-6 rounded-2xl border-white/5 hover:border-primary/20 transition-colors">
-            <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
-              <Cpu className="w-6 h-6 text-primary" />
+        {/* Scroll cue */}
+        <div className="absolute bottom-10 left-6 md:left-16 flex items-center gap-3 text-[10px] tracking-widest uppercase text-white/20">
+          <span className="w-8 h-px bg-white/20" />
+          Scroll to explore
+        </div>
+      </section>
+
+      {/* ─── 3D SECTION ──────────────────────────────────────── */}
+      <Hero3D />
+
+      {/* ─── FEATURES ────────────────────────────────────────── */}
+      <section className="px-6 md:px-16 lg:px-24 py-32 border-t border-white/[0.05]">
+        <div className="mb-16">
+          <p className="text-[10px] tracking-[0.3em] uppercase text-silver/40 mb-4">Why The Assembly</p>
+          <h2 className="reveal-heading font-display font-light text-4xl md:text-6xl text-white/90 tracking-tight">
+            Precision, <span className="metallic-text italic">by design.</span>
+          </h2>
+        </div>
+
+        <div ref={featuresRef} className="grid grid-cols-1 md:grid-cols-3 gap-px bg-white/[0.05]">
+          {FEATURES.map((f) => (
+            <div
+              key={f.index}
+              className="feature-card group bg-background p-10 hover:bg-surface transition-colors duration-500"
+            >
+              <span className="text-[10px] tracking-[0.25em] uppercase text-silver/30 mb-6 block">— {f.index}</span>
+              <h3 className="text-lg font-medium text-white/90 mb-4 tracking-tight">{f.title}</h3>
+              <p className="text-sm text-white/35 leading-relaxed font-light">{f.body}</p>
+              <ArrowUpRight className="w-4 h-4 text-silver/20 mt-8 group-hover:text-silver/60 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" />
             </div>
-            <h3 className="text-lg font-bold text-white mb-2">Premium Selection</h3>
-            <p className="text-sm text-muted">Curated components from top-tier manufacturers ensuring elite performance.</p>
-          </div>
-          <div className="glass p-6 rounded-2xl border-white/5 hover:border-secondary/20 transition-colors">
-            <div className="w-12 h-12 bg-secondary/10 rounded-xl flex items-center justify-center mb-4">
-              <Target className="w-6 h-6 text-secondary" />
-            </div>
-            <h3 className="text-lg font-bold text-white mb-2">Guaranteed Compatibility</h3>
-            <p className="text-sm text-muted">Our smart algorithm ensures your selected parts work flawlessly together.</p>
-          </div>
-          <div className="glass p-6 rounded-2xl border-white/5 hover:border-blue-500/20 transition-colors">
-            <div className="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center mb-4">
-              <Zap className="w-6 h-6 text-blue-400" />
-            </div>
-            <h3 className="text-lg font-bold text-white mb-2">Instant Checkout</h3>
-            <p className="text-sm text-muted">Seamlessly review your build and securely process your order in seconds.</p>
-          </div>
-        </motion.div>
-      </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── BOTTOM CTA ──────────────────────────────────────── */}
+      <section className="px-6 md:px-16 lg:px-24 py-32 border-t border-white/[0.05] text-center">
+        <p className="text-[10px] tracking-[0.3em] uppercase text-silver/40 mb-6">Ready to build?</p>
+        <h2 className="reveal-heading font-display font-light text-4xl md:text-7xl text-white mb-12 tracking-tight">
+          Your dream rig,<br />
+          <span className="metallic-text italic">assembled.</span>
+        </h2>
+        <Link href="/build" className="ghost-btn group mx-auto">
+          Start Building
+          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+        </Link>
+      </section>
     </div>
-    <Hero3D />
-    </>
   );
 }

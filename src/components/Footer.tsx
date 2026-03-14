@@ -1,29 +1,26 @@
 import Link from "next/link";
-import { Cpu, Github, Linkedin, Mail } from "lucide-react";
+import { Github, Linkedin, Mail } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="w-full border-t border-white/5 glass mt-auto">
-      <div className="container mx-auto px-4 py-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
+    <footer className="w-full border-t border-white/[0.05] mt-auto">
+      <div className="container mx-auto px-6 md:px-16 lg:px-24 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           {/* Brand */}
           <div>
-            <Link href="/" className="flex items-center gap-2 mb-4 group w-fit">
-              <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                <Cpu className="w-5 h-5 text-primary" />
-              </div>
-              <span className="font-bold text-lg tracking-tight text-white group-hover:text-primary transition-colors">
+            <Link href="/" className="block mb-5 w-fit">
+              <span className="font-display text-xl font-light tracking-[0.15em] uppercase metallic-text">
                 The Assembly
               </span>
             </Link>
-            <p className="text-sm text-muted leading-relaxed max-w-xs">
+            <p className="text-xs text-white/30 leading-relaxed max-w-xs font-light">
               A boutique PC hardware configurator for those who demand the absolute best.
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Quick Links</h3>
+            <h3 className="text-[10px] font-medium text-white/30 uppercase tracking-[0.2em] mb-5">Explore</h3>
             <ul className="space-y-3">
               {[
                 { label: "Configurator", href: "/build" },
@@ -31,7 +28,10 @@ export function Footer() {
                 { label: "Support", href: "/support" },
               ].map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-sm text-muted hover:text-white transition-colors">
+                  <Link
+                    href={link.href}
+                    className="text-xs text-white/30 hover:text-white/70 tracking-wider transition-colors duration-300"
+                  >
                     {link.label}
                   </Link>
                 </li>
@@ -41,44 +41,34 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">Contact</h3>
+            <h3 className="text-[10px] font-medium text-white/30 uppercase tracking-[0.2em] mb-5">Contact</h3>
             <div className="space-y-3">
-              <a
-                href="mailto:bhavadeepchouhan@gmail.com"
-                className="flex items-center gap-3 text-sm text-muted hover:text-white transition-colors"
-              >
-                <Mail className="w-4 h-4 text-primary shrink-0" />
-                bhavadeepchouhan@gmail.com
-              </a>
-              <a
-                href="https://github.com/Bhavdeep-04"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 text-sm text-muted hover:text-white transition-colors"
-              >
-                <Github className="w-4 h-4 shrink-0" />
-                github.com/Bhavdeep-04
-              </a>
-              <a
-                href="https://linkedin.com/in/bhavdeep-chouhan"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 text-sm text-muted hover:text-white transition-colors"
-              >
-                <Linkedin className="w-4 h-4 text-blue-400 shrink-0" />
-                linkedin.com/in/bhavdeep-chouhan
-              </a>
+              {[
+                { href: "mailto:bhavadeepchouhan@gmail.com", icon: Mail, label: "bhavadeepchouhan@gmail.com" },
+                { href: "https://github.com/Bhavdeep-04", icon: Github, label: "github.com/Bhavdeep-04" },
+                { href: "https://linkedin.com/in/bhavdeep-chouhan", icon: Linkedin, label: "linkedin.com/in/bhavdeep-chouhan" },
+              ].map(({ href, icon: Icon, label }) => (
+                <a
+                  key={href}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 text-xs text-white/30 hover:text-white/60 transition-colors duration-300"
+                >
+                  <Icon className="w-3.5 h-3.5 shrink-0" />
+                  {label}
+                </a>
+              ))}
             </div>
           </div>
         </div>
 
-        <div className="border-t border-white/5 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-muted">
-            © {new Date().getFullYear()} The Assembly. Built by Bhavdeep Chouhan.
+        <div className="border-t border-white/[0.05] pt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <p className="text-[10px] text-white/20 tracking-widest uppercase">
+            © {new Date().getFullYear()} The Assembly — Bhavdeep Chouhan
           </p>
-          <p className="text-xs text-muted">
-            All payments secured by{" "}
-            <span className="text-primary font-medium">Razorpay</span>
+          <p className="text-[10px] text-white/20 tracking-widest uppercase">
+            Payments by Razorpay
           </p>
         </div>
       </div>
