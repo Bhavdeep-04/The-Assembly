@@ -47,7 +47,7 @@ export default function SupportPage() {
           className="glass rounded-2xl p-8 border border-white/5 hover:border-primary/20 transition-colors"
         >
           <h2 className="text-2xl font-bold text-white mb-2">Bhavdeep Chouhan</h2>
-          <p className="text-muted text-sm mb-8">Founder & Lead Engineer — The Assembly</p>
+          <p className="text-muted text-sm mb-8">Founder & Lead Engineer — ASMBLY</p>
 
           <div className="space-y-5">
             <a

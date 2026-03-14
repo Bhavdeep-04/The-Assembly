@@ -10,7 +10,7 @@ export function Footer() {
           <div>
             <Link href="/" className="block mb-5 w-fit">
               <span className="font-display text-xl font-light tracking-[0.15em] uppercase metallic-text">
-                The Assembly
+                ASMBLY
               </span>
             </Link>
             <p className="text-xs text-white/30 leading-relaxed max-w-xs font-light">
@@ -65,7 +65,7 @@ export function Footer() {
 
         <div className="border-t border-white/[0.05] pt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <p className="text-[10px] text-white/20 tracking-widest uppercase">
-            © {new Date().getFullYear()} The Assembly — Bhavdeep Chouhan
+            © {new Date().getFullYear()} ASMBLY — Bhavdeep Chouhan
           </p>
           <p className="text-[10px] text-white/20 tracking-widest uppercase">
             Payments by Razorpay

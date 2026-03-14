@@ -58,7 +58,7 @@ export function CartSummary() {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: data.amount,
         currency: data.currency,
-        name: "The Assembly",
+        name: "ASMBLY",
         description: "Complete your PC Build",
         order_id: data.orderId,
         theme: {

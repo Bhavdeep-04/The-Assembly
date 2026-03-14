@@ -114,7 +114,7 @@ export default function LoginPage() {
             <p className="text-sm text-muted text-center">
               {isLogin
                 ? "Sign in to save your custom builds and process orders."
-                : "Join The Assembly to build and buy your ultimate machine."}
+                : "Join ASMBLY to build and buy your ultimate machine."}
             </p>
           </div>
 

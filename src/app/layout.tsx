@@ -16,7 +16,7 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "The Assembly | Premium PC Configurator",
+  title: "ASMBLY | Premium PC Configurator",
   description: "Build your dream PC with our premium, interactive configurator.",
 };
 

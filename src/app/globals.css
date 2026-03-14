@@ -1,84 +1,148 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  /* ── Fonts ──────────────────────────────────────────── */
+  --font-sans:    "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Cormorant Garamond", Georgia, serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-mono:    ui-monospace, "Courier New", monospace;
 
-  /* Quiet Luxury — Obsidian + Platinum */
+  /* ── Quiet Luxury Palette ────────────────────────────── */
   --color-background:    #09090b;
   --color-surface:       #111113;
   --color-surface-hover: #18181b;
   --color-border:        #27272a;
 
-  /* Platinum / Silver Accent */
   --color-silver:        #d4d4d8;
   --color-platinum:      #e4e4e7;
   --color-silver-dim:    #71717a;
-  --color-silver-glow:   rgba(212, 212, 216, 0.12);
+  --color-silver-glow:   rgba(212, 212, 216, 0.10);
 
-  /* Keep primary for functional UI (cart badge, etc.) */
   --color-primary:       #a1a1aa;
-  --color-primary-glow:  rgba(161, 161, 170, 0.2);
+  --color-primary-glow:  rgba(161, 161, 170, 0.15);
   --color-secondary:     #52525b;
-
   --color-foreground:    #fafafa;
   --color-muted:         #71717a;
+
+  /* ── Spacing Scale (8px base) ────────────────────────── */
+  /* 8 · 16 · 32 · 64 · 128px map to Tailwind 2/4/8/16/32 */
+
+  /* ── Layout ──────────────────────────────────────────── */
+  --container-width: 1200px;
+  --container-px:    clamp(1.5rem, 4vw, 3rem); /* responsive gutter */
+  --section-py:      clamp(5rem, 10vw, 8rem);   /* vertical rhythm */
 }
 
-:root {
-  color-scheme: dark;
-}
+:root { color-scheme: dark; }
 
-html {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
+/* ─── Base ───────────────────────────────────────────────── */
 @layer base {
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
-    @apply antialiased font-sans selection:bg-silver/20 selection:text-platinum;
+    @apply font-sans text-base leading-relaxed;
+    @apply selection:bg-silver/20 selection:text-platinum;
   }
 
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar { width: 3px; }
   ::-webkit-scrollbar-track { background: var(--color-background); }
   ::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
 }
 
+/* ─── Typography Scale ───────────────────────────────────── */
+/*
+  H1  Display: Cormorant Garamond light, clamp(4rem → 9rem)
+  H2  Section: Cormorant Garamond light, clamp(2.5rem → 5.5rem)
+  H3  Card:    Inter medium,              1.125rem (18px)
+  Body Large:  Inter light,               1rem / 1.75 lh
+  Body Small:  Inter light,               0.8125rem / 1.8 lh
+  Label:       Inter medium,              0.625rem / tracking 0.3em
+*/
 @layer utilities {
-  /* Glassmorphism — quiet */
-  .glass {
-    @apply bg-surface/50 backdrop-blur-md border border-white/[0.06];
+
+  /* ── Headings ── */
+  .h1 {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(3.75rem, 9vw, 9rem);
+    line-height: 0.92;
+    letter-spacing: -0.025em;
   }
 
-  /* Metallic gradient text */
+  .h2 {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(2.25rem, 5.5vw, 5.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+
+  .h3 {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 1.0625rem; /* 17px */
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+
+  /* ── Body ── */
+  .body-lg {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 1rem;       /* 16px */
+    line-height: 1.75;
+    max-width: 48ch;
+  }
+
+  .body-sm {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 0.8125rem;  /* 13px */
+    line-height: 1.8;
+    max-width: 52ch;
+  }
+
+  /* ── Label (eyebrows / metadata) ── */
+  .label {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 0.625rem;   /* 10px */
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+  }
+
+  /* ── Metallic gradient clip text ── */
   .metallic-text {
-    background: linear-gradient(135deg, #a1a1aa 0%, #f4f4f5 40%, #a1a1aa 70%, #71717a 100%);
+    background: linear-gradient(130deg, #a1a1aa 0%, #f4f4f5 42%, #a1a1aa 72%, #71717a 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  /* Thin platinum border glow on hover */
-  .platinum-border {
-    @apply border border-silver/20 hover:border-silver/50 transition-colors duration-500;
+  /* ── Glassmorphism ── */
+  .glass {
+    @apply bg-surface/50 backdrop-blur-md border border-white/[0.06];
   }
 
-  /* Ghost button state */
+  /* ── Ghost CTA button ── */
   .ghost-btn {
-    @apply relative inline-flex items-center justify-center gap-2 px-6 py-3
-           border border-silver/25 text-silver text-sm tracking-[0.08em] uppercase
-           transition-all duration-500 overflow-hidden;
+    @apply relative inline-flex items-center gap-2.5 px-7 py-3.5
+           border border-silver/25 text-silver/70 text-[10px] tracking-[0.1em] uppercase
+           hover:text-white hover:border-silver/50
+           transition-colors duration-400 overflow-hidden;
   }
   .ghost-btn::after {
     content: '';
-    @apply absolute inset-0 bg-silver/5 scale-x-0 origin-left transition-transform duration-500;
+    @apply absolute inset-0 bg-silver/[0.05] scale-x-0 origin-left;
+    transition: transform 0.5s ease;
   }
-  .ghost-btn:hover::after {
-    @apply scale-x-100;
+  .ghost-btn:hover::after { transform: scaleX(1); }
+
+  /* Force transparency on the R3F Canvas for the hanging bulb */
+  .bulb-canvas-wrapper > div,
+  .bulb-canvas-wrapper canvas {
+    background: transparent !important;
   }
 }

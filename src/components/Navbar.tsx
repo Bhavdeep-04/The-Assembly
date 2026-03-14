@@ -35,15 +35,15 @@ export function Navbar() {
         {/* Wordmark */}
         <Link href="/" className="group">
           <span className="font-display text-xl font-light tracking-[0.15em] uppercase metallic-text">
-            The Assembly
+            ASMBLY
           </span>
         </Link>
 
         {/* Center nav */}
         <nav className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
           {[
-            { label: "Configurator", href: "/build" },
             { label: "Pre-Builts", href: "/prebuilts" },
+            { label: "Configurator", href: "/build" },
             { label: "Support", href: "/support" },
           ].map((item) => (
             <Link

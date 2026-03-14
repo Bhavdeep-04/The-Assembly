@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { BuildInterface } from './BuildInterface'; // Client component containing the layout logic
 
 export const metadata: Metadata = {
-  title: 'Configurator | The Assembly',
+  title: 'Configurator | ASMBLY',
   description: 'Select your premium PC components.',
 };
 
