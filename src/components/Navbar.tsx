@@ -59,18 +59,14 @@ export function Navbar() {
         {/* Right side */}
         <div className="flex items-center gap-5">
           {session ? (
-            <>
-              <span className="hidden sm:block text-xs tracking-widest uppercase text-white/40">
-                {session.user?.name?.split(" ")[0]}
+            <Link href="/account" className="flex items-center gap-3 group">
+              <span className="hidden sm:block text-xs tracking-widest uppercase text-white/40 group-hover:text-white/80 transition-colors">
+                {session.user?.name?.split(" ")[0] || "Account"}
               </span>
-              <button
-                onClick={() => signOut({ callbackUrl: "/" })}
-                className="text-xs tracking-widest uppercase text-white/40 hover:text-white/80 transition-colors flex items-center gap-1.5"
-              >
-                <LogOut className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Out</span>
-              </button>
-            </>
+              <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-[10px] font-bold text-primary group-hover:bg-primary/20 group-hover:border-primary/40 transition-all">
+                {session.user?.name ? session.user.name.charAt(0).toUpperCase() : <User className="w-3.5 h-3.5" />}
+              </div>
+            </Link>
           ) : (
             <Link
               href="/login"

@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
 import { AuthProvider } from "@/components/AuthProvider";
-import { LenisProvider } from "@/components/LenisProvider";
+import { Navbar } from "@/components/Navbar";
 
 const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-sans" });
 const cormorant = Cormorant_Garamond({
@@ -17,7 +15,7 @@ const cormorant = Cormorant_Garamond({
 
 export const metadata: Metadata = {
   title: "ASMBLY | Premium PC Configurator",
-  description: "Build your dream PC with our premium, interactive configurator.",
+  description: "Bespoke workstations for professionals who demand the absolute best.",
 };
 
 export default function RootLayout({
@@ -26,21 +24,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${cormorant.variable} dark`} style={{ colorScheme: "dark" }}>
-      <body className="antialiased font-sans bg-background text-foreground min-h-screen flex flex-col">
+    <html
+      lang="en"
+      className={`${inter.variable} ${cormorant.variable} dark`}
+      style={{ colorScheme: "dark" }}
+    >
+      <body
+        style={{
+          background: "var(--color-background)",
+          color: "var(--color-foreground)",
+          margin: 0,
+          padding: 0,
+        }}
+        suppressHydrationWarning
+      >
         <AuthProvider>
-          <LenisProvider>
-            <Navbar />
-            <main className="flex-1 flex flex-col">
-              {children}
-            </main>
-            <Footer />
-          </LenisProvider>
+          <Navbar />
+          {children}
         </AuthProvider>
       </body>
     </html>
   );
 }
-
-
-

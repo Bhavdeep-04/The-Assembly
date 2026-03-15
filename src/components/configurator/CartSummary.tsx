@@ -2,11 +2,17 @@
 
 import { useCartStore } from "@/store/useCartStore";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trash2, ShoppingCart, ArrowRight } from "lucide-react";
+import { Trash2, ShoppingCart, ArrowRight, CheckCircle2, CircleDashed } from "lucide-react";
 import { Button } from "../ui/Button";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+
+import { Category } from "@/data/products";
+
+const REQUIRED_CATEGORIES: Category[] = [
+  'Motherboard', 'Processor', 'RAM', 'CPU Cooler', 'GPU', 'Power Supply', 'Case'
+];
 
 export function CartSummary() {
   const { data: session } = useSession();
@@ -16,6 +22,9 @@ export function CartSummary() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
+
+  const filledCategories = items.map(item => item.category);
+  const isBuildComplete = REQUIRED_CATEGORIES.every(cat => filledCategories.includes(cat));
 
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
@@ -106,16 +115,34 @@ export function CartSummary() {
   };
 
   return (
-    <div className="glass rounded-xl p-6 h-fit">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold flex items-center gap-2">
-          <ShoppingCart className="w-5 h-5 text-primary" />
-          Your Build
-        </h2>
+    <div className="glass rounded-xl p-6 h-fit flex flex-col">
+      <div className="flex items-start justify-between mb-4">
+        <div>
+          <h2 className="text-xl font-bold flex items-center gap-2 mb-2">
+            <ShoppingCart className="w-5 h-5 text-primary" />
+            Your Build
+          </h2>
+          {mounted && (
+            <div className="flex items-center gap-1.5 mt-2 mb-2">
+              {REQUIRED_CATEGORIES.map((cat, i) => {
+                const isFilled = filledCategories.includes(cat);
+                return (
+                  <div key={cat} className="relative group cursor-help" title={cat}>
+                    {isFilled ? (
+                      <CheckCircle2 className="w-4 h-4 text-primary drop-shadow-[0_0_5px_rgba(200,184,154,0.5)]" />
+                    ) : (
+                      <CircleDashed className="w-4 h-4 text-white/20 hover:text-white/40 transition-colors" />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
         {mounted && items.length > 0 && (
           <button
             onClick={clearCart}
-            className="text-xs text-muted hover:text-white transition-colors flex items-center gap-1"
+            className="text-xs text-muted hover:text-white transition-colors flex items-center gap-1 mt-1 shrink-0"
           >
             <Trash2 className="w-3 h-3" />
             Clear
@@ -127,6 +154,7 @@ export function CartSummary() {
         <AnimatePresence mode="popLayout">
           {!mounted || items.length === 0 ? (
             <motion.div
+              key="empty-cart"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -182,12 +210,12 @@ export function CartSummary() {
         </div>
 
         <Button
-          variant="primary"
-          className="w-full text-sm font-bold tracking-wide uppercase"
+          variant={isBuildComplete ? "primary" : "outline"}
+          className={`w-full text-sm font-bold tracking-wide uppercase transition-all ${!isBuildComplete ? "border-primary/20 hover:border-primary/40 text-primary/80" : ""}`}
           disabled={!mounted || items.length === 0 || isProcessing}
           onClick={handleCheckout}
         >
-          {isProcessing ? "Processing..." : "Checkout"} <ArrowRight className="w-4 h-4 ml-2" />
+          {isProcessing ? "Processing..." : isBuildComplete ? "Checkout" : "Complete Build To Checkout"} <ArrowRight className="w-4 h-4 ml-2" />
         </Button>
       </div>
     </div>

@@ -9,6 +9,7 @@ export interface CartItem extends Product {
 interface CartState {
   items: CartItem[];
   addItem: (product: Product) => void;
+  getItemByCategory: (category: string) => CartItem | undefined;
   removeItem: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
@@ -23,19 +24,21 @@ export const useCartStore = create<CartState>()(
       
       addItem: (product: Product) => {
         const currentItems = get().items;
-        const existingItem = currentItems.find(item => item.id === product.id);
+        const existingCategoryIndex = currentItems.findIndex(item => item.category === product.category);
         
-        if (existingItem) {
-          set({
-            items: currentItems.map(item => 
-              item.id === product.id 
-                ? { ...item, quantity: item.quantity + 1 }
-                : item
-            )
-          });
+        if (existingCategoryIndex >= 0) {
+          // Replace the item in the same category
+          const newItems = [...currentItems];
+          newItems[existingCategoryIndex] = { ...product, quantity: 1 };
+          set({ items: newItems });
         } else {
+          // Add new item
           set({ items: [...currentItems, { ...product, quantity: 1 }] });
         }
+      },
+
+      getItemByCategory: (category: string) => {
+        return get().items.find(item => item.category === category);
       },
 
       removeItem: (productId: string) => {

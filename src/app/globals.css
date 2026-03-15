@@ -7,59 +7,58 @@
   --font-display: "Cormorant Garamond", Georgia, serif;
   --font-mono:    ui-monospace, "Courier New", monospace;
 
-  /* ── Quiet Luxury Palette ────────────────────────────── */
-  --color-background:    #09090b;
-  --color-surface:       #111113;
-  --color-surface-hover: #18181b;
-  --color-border:        #27272a;
+  /* ── Warm Obsidian Palette ────────────────────────────── */
+  --color-background:    #0A0908;   /* rich warm black */
+  --color-surface:       #121010;   /* slightly elevated warm surface */
+  --color-surface-hover: #1c1814;   /* hover state */
+  --color-border:        #2a231e;   /* warm dark border */
 
-  --color-silver:        #d4d4d8;
-  --color-platinum:      #e4e4e7;
-  --color-silver-dim:    #71717a;
-  --color-silver-glow:   rgba(212, 212, 216, 0.10);
+  /* Champagne / Platinum tones — warm metallic accents */
+  --color-silver:        #c8b89a;   /* desert sand / champagne */
+  --color-platinum:      #e0ceaa;   /* warm platinum */
+  --color-silver-dim:    #78665a;   /* muted warm */
+  --color-silver-glow:   rgba(200, 184, 154, 0.10);
 
-  --color-primary:       #a1a1aa;
-  --color-primary-glow:  rgba(161, 161, 170, 0.15);
-  --color-secondary:     #52525b;
-  --color-foreground:    #fafafa;
-  --color-muted:         #71717a;
+  --color-primary:       #b8a07a;   /* warm amber-silver */
+  --color-primary-glow:  rgba(184, 160, 122, 0.15);
+  --color-secondary:     #504038;
+  --color-foreground:    #f5ece0;   /* warm white */
+  --color-muted:         #7a6858;
 
-  /* ── Spacing Scale (8px base) ────────────────────────── */
-  /* 8 · 16 · 32 · 64 · 128px map to Tailwind 2/4/8/16/32 */
+  /* Warm accent for highlights and glows */
+  --color-warm-glow:     rgba(200, 150, 80, 0.12);
+  --color-bulb-warm:     rgba(255, 224, 160, 0.08);
 
   /* ── Layout ──────────────────────────────────────────── */
   --container-width: 1200px;
-  --container-px:    clamp(1.5rem, 4vw, 3rem); /* responsive gutter */
-  --section-py:      clamp(5rem, 10vw, 8rem);   /* vertical rhythm */
+  --container-px:    clamp(1.5rem, 4vw, 3rem);
+  --section-py:      clamp(5rem, 10vw, 8rem);
 }
 
 :root { color-scheme: dark; }
 
-html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
 /* ─── Base ───────────────────────────────────────────────── */
 @layer base {
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    overflow-x: hidden; /* Global horizontal lock */
+    overscroll-behavior: none;
     @apply font-sans text-base leading-relaxed;
     @apply selection:bg-silver/20 selection:text-platinum;
   }
 
-  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar { width: 2px; }
   ::-webkit-scrollbar-track { background: var(--color-background); }
   ::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
 }
 
-/* ─── Typography Scale ───────────────────────────────────── */
-/*
-  H1  Display: Cormorant Garamond light, clamp(4rem → 9rem)
-  H2  Section: Cormorant Garamond light, clamp(2.5rem → 5.5rem)
-  H3  Card:    Inter medium,              1.125rem (18px)
-  Body Large:  Inter light,               1rem / 1.75 lh
-  Body Small:  Inter light,               0.8125rem / 1.8 lh
-  Label:       Inter medium,              0.625rem / tracking 0.3em
-*/
+/* ─── Typography Scale ─────────────────────────────────── */
 @layer utilities {
 
   /* ── Headings ── */
@@ -82,7 +81,7 @@ html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   .h3 {
     font-family: var(--font-sans);
     font-weight: 500;
-    font-size: 1.0625rem; /* 17px */
+    font-size: 1.0625rem;
     line-height: 1.4;
     letter-spacing: -0.01em;
   }
@@ -91,7 +90,7 @@ html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   .body-lg {
     font-family: var(--font-sans);
     font-weight: 300;
-    font-size: 1rem;       /* 16px */
+    font-size: 1rem;
     line-height: 1.75;
     max-width: 48ch;
   }
@@ -99,46 +98,129 @@ html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   .body-sm {
     font-family: var(--font-sans);
     font-weight: 300;
-    font-size: 0.8125rem;  /* 13px */
+    font-size: 0.8125rem;
     line-height: 1.8;
     max-width: 52ch;
   }
 
-  /* ── Label (eyebrows / metadata) ── */
+  /* ── Label ── */
   .label {
     font-family: var(--font-sans);
     font-weight: 500;
-    font-size: 0.625rem;   /* 10px */
+    font-size: 0.625rem;
     letter-spacing: 0.3em;
     text-transform: uppercase;
   }
 
-  /* ── Metallic gradient clip text ── */
+  /* ── Warm Champagne Metallic gradient clip text ── */
   .metallic-text {
-    background: linear-gradient(130deg, #a1a1aa 0%, #f4f4f5 42%, #a1a1aa 72%, #71717a 100%);
+    background: linear-gradient(
+      125deg,
+      #c8a87a 0%,
+      #f0ddb0 30%,
+      #e8c880 55%,
+      #c09060 80%,
+      #a07848 100%
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  /* ── Glassmorphism ── */
+  /* ── Warm Frosted Glassmorphism ── */
   .glass {
-    @apply bg-surface/50 backdrop-blur-md border border-white/[0.06];
+    background: rgba(18, 16, 16, 0.55);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border: 1px solid rgba(200, 184, 154, 0.08);
+  }
+
+  /* ── Warm Glassmorphism for cards ── */
+  .warm-glass {
+    background: linear-gradient(
+      135deg,
+      rgba(20, 17, 14, 0.80) 0%,
+      rgba(15, 13, 11, 0.90) 100%
+    );
+    backdrop-filter: blur(16px) saturate(1.3);
+    -webkit-backdrop-filter: blur(16px) saturate(1.3);
+    border: 1px solid rgba(200, 184, 154, 0.06);
+    box-shadow: inset 0 1px 0 rgba(200, 184, 154, 0.04);
+  }
+
+  /* ── Champagne border ── */
+  .champagne-border {
+    border-color: rgba(200, 184, 154, 0.12);
   }
 
   /* ── Ghost CTA button ── */
   .ghost-btn {
     @apply relative inline-flex items-center gap-2.5 px-7 py-3.5
-           border border-silver/25 text-silver/70 text-[10px] tracking-[0.1em] uppercase
-           hover:text-white hover:border-silver/50
+           border text-[10px] tracking-[0.1em] uppercase
            transition-colors duration-400 overflow-hidden;
+    border-color: rgba(200, 184, 154, 0.25);
+    color: rgba(200, 184, 154, 0.7);
+  }
+  .ghost-btn:hover {
+    color: var(--color-foreground);
+    border-color: rgba(200, 184, 154, 0.5);
   }
   .ghost-btn::after {
     content: '';
-    @apply absolute inset-0 bg-silver/[0.05] scale-x-0 origin-left;
+    @apply absolute inset-0 scale-x-0 origin-left;
+    background: rgba(200, 184, 154, 0.04);
     transition: transform 0.5s ease;
   }
   .ghost-btn:hover::after { transform: scaleX(1); }
+
+  /* ── Panel entry warp animation (kept for legacy reference if needed) ── */
+  @keyframes panelWarpIn {
+    0%   { transform: scale(1.06); filter: blur(6px); opacity: 0.6; }
+    100% { transform: scale(1);    filter: blur(0px); opacity: 1; }
+  }
+  .panel-warp-in {
+    animation: panelWarpIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  /* ── Grain / noise overlay ── */
+  .grain-overlay {
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");
+    background-size: 256px 256px;
+    mix-blend-mode: overlay;
+  }
+
+  /* ── Warm radial backlight behind canvas ── */
+  .canvas-backlight {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse 70% 60% at 68% 50%,
+      rgba(180, 120, 60, 0.10) 0%,
+      rgba(120, 80, 40, 0.05) 40%,
+      transparent 70%
+    );
+  }
+
+  /* ── Warm floor glow at bottom of hero ── */
+  .floor-glow {
+    position: absolute;
+    bottom: 0;
+    left: 30%;
+    right: 0;
+    height: 35%;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse 80% 50% at 60% 100%,
+      rgba(160, 100, 40, 0.08) 0%,
+      transparent 70%
+    );
+  }
 
   /* Force transparency on the R3F Canvas for the hanging bulb */
   .bulb-canvas-wrapper,
