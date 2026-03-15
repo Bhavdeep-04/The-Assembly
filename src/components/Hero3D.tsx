@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 
@@ -29,11 +29,10 @@ export function Hero3D() {
 
       {/* Warm studio light bloom — sits behind the PC image */}
       <motion.div
-        style={{ opacity }}
         className="absolute right-[8%] top-[15%] w-[340px] h-[340px] rounded-full pointer-events-none z-0"
         style={{
-          background:
-            "radial-gradient(ellipse at center, rgba(200,160,100,0.10) 0%, rgba(160,120,70,0.06) 40%, transparent 75%)",
+          opacity,
+          background: "radial-gradient(ellipse at center, rgba(200,160,100,0.10) 0%, rgba(160,120,70,0.06) 40%, transparent 75%)",
           filter: "blur(40px)",
         }}
       />
@@ -60,8 +59,7 @@ export function Hero3D() {
         <div
           className="absolute bottom-0 left-[10%] right-[10%] h-[60px] pointer-events-none"
           style={{
-            background:
-              "radial-gradient(ellipse at center, rgba(0,0,0,0.45) 0%, transparent 72%)",
+            background: "radial-gradient(ellipse at center, rgba(0,0,0,0.45) 0%, transparent 72%)",
             filter: "blur(18px)",
             transform: "translateY(30%)",
           }}
