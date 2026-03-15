@@ -141,8 +141,12 @@ html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
   .ghost-btn:hover::after { transform: scaleX(1); }
 
   /* Force transparency on the R3F Canvas for the hanging bulb */
-  .bulb-canvas-wrapper > div,
+  .bulb-canvas-wrapper,
+  .bulb-canvas-wrapper div,
   .bulb-canvas-wrapper canvas {
-    background: transparent !important;
+    background: none !important;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
   }
 }
