@@ -23,7 +23,7 @@ export function Hero3D() {
                 if (node && !isReady) setIsReady(true);
               }}
             >
-              <Stage environment="studio" intensity={1.6} adjustCamera={1.8}>
+              <Stage environment="studio" intensity={2.0} adjustCamera={1.8}>
                 <PcModel />
               </Stage>
             </group>

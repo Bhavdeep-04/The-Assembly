@@ -11,8 +11,8 @@ export function Processor3D() {
       <Canvas camera={{ position: [0, 2, 10], fov: 35 }}>
         <React.Suspense fallback={null}>
           {/* Minimal ambient + single directional = matte, dark look */}
-          <ambientLight intensity={0.15} />
-          <directionalLight position={[2, 5, 3]} intensity={0.35} color="#c0c0c0" />
+          <ambientLight intensity={0.19} />
+          <directionalLight position={[2, 5, 3]} intensity={0.44} color="#c0c0c0" />
           <PresentationControls
             snap={true}
             rotation={[0.6, -Math.PI / 6, 0]}
