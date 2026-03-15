@@ -43,8 +43,6 @@ const SlideSection = ({ children, className = "" }: { children: React.ReactNode,
 
 // ─── PAGE ─────────────────────────────────────────────────────────────────────
 export default function Home() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
   const h1Ref   = useRef<HTMLHeadingElement>(null);
   const bodyRef = useRef<HTMLParagraphElement>(null);
   const ctaRef  = useRef<HTMLDivElement>(null);
@@ -66,14 +64,14 @@ export default function Home() {
         const content = sec.querySelector(".distortion-target");
         if (content) {
           gsap.fromTo(content, 
-            { y: 60, opacity: 0, filter: "blur(8px)" },
+            { y: 50, opacity: 0 },  // only transform+opacity — GPU composited
             { 
-              y: 0, opacity: 1, filter: "blur(0px)",
-              ease: "power3.out", duration: 1.2,
+              y: 0, opacity: 1,
+              ease: "power3.out", duration: 1.0,
               scrollTrigger: {
                 trigger: sec,
-                start: "top 75%", // Trigger when section top crosses 75% down the viewport
-                toggleActions: "play none none reverse"
+                start: "top 80%",
+                toggleActions: "play none none none" // no reverse — avoids stutter on scroll-up
               }
             }
           );

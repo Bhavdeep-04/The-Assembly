@@ -1,155 +1,72 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { PresentationControls, Stage } from "@react-three/drei";
-import * as THREE from "three";
-import { PcModel } from "./PcModel";
-import gsap from "gsap";
-import { usePageSlideStore, useCurrentSlide, useTargetSlide, useIsTransitioning } from "@/store/usePageSlideStore";
-import { SLIDES, TRANSITION_TIMINGS } from "@/utils/slideConfig";
-
-/**
- * Inner component that handles model animation
- */
-function AnimatedPcModel() {
-  const groupRef = useRef<THREE.Group>(null);
-  const { camera } = useThree();
-  const currentSlide = useCurrentSlide();
-  const targetSlide = useTargetSlide();
-  const isTransitioning = useIsTransitioning();
-  
-  const animationTimelineRef = useRef<gsap.core.Timeline | null>(null);
-
-  // Animate model position/rotation and camera during transition
-  useEffect(() => {
-    if (!groupRef.current || !isTransitioning) return;
-
-    // Kill any ongoing animation
-    if (animationTimelineRef.current) {
-      animationTimelineRef.current.kill();
-    }
-
-    const currentConfig = SLIDES[currentSlide];
-    const nextConfig = SLIDES[targetSlide];
-
-    if (!nextConfig || nextConfig.modelType !== "pc") return;
-
-    // Create animation timeline for the delay phase (0.5s)
-    const tl = gsap.timeline();
-    
-    // Animate model position
-    tl.to(
-      groupRef.current.position,
-      {
-        x: nextConfig.model.position[0],
-        y: nextConfig.model.position[1],
-        z: nextConfig.model.position[2],
-        duration: TRANSITION_TIMINGS.delayBeforeDistortion,
-        ease: "expo.inOut",
-      },
-      0
-    );
-
-    // Animate model rotation
-    tl.to(
-      groupRef.current.rotation,
-      {
-        x: nextConfig.model.rotation[0],
-        y: nextConfig.model.rotation[1],
-        z: nextConfig.model.rotation[2],
-        duration: TRANSITION_TIMINGS.delayBeforeDistortion,
-        ease: "expo.inOut",
-      },
-      0
-    );
-
-    // Animate model scale
-    tl.to(
-      groupRef.current.scale,
-      {
-        x: nextConfig.model.scale,
-        y: nextConfig.model.scale,
-        z: nextConfig.model.scale,
-        duration: TRANSITION_TIMINGS.delayBeforeDistortion,
-        ease: "expo.inOut",
-      },
-      0
-    );
-
-    // Animate camera position
-    tl.to(
-      camera.position,
-      {
-        x: nextConfig.camera.position[0],
-        y: nextConfig.camera.position[1],
-        z: nextConfig.camera.position[2],
-        duration: TRANSITION_TIMINGS.delayBeforeDistortion,
-        ease: "expo.inOut",
-      },
-      0
-    );
-
-    // Animate camera FOV
-    tl.to(
-      camera,
-      {
-        fov: nextConfig.camera.fov,
-        duration: TRANSITION_TIMINGS.delayBeforeDistortion,
-        ease: "expo.inOut",
-        onUpdate: () => {
-          camera.updateProjectionMatrix();
-        },
-      },
-      0
-    );
-
-    animationTimelineRef.current = tl;
-
-    return () => {
-      if (animationTimelineRef.current) {
-        animationTimelineRef.current.kill();
-      }
-    };
-  }, [isTransitioning, currentSlide, targetSlide, camera]);
-
-  return (
-    <group ref={groupRef}>
-      <Stage environment="studio" intensity={2.0} adjustCamera={1.8}>
-        <PcModel />
-      </Stage>
-    </group>
-  );
-}
+import React, { useEffect, useRef } from "react";
+import Image from "next/image";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 export function Hero3D() {
-  const currentSlide = useCurrentSlide();
-  const isVisible = [0, 2, 6].includes(currentSlide);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollY } = useScroll();
 
-  if (!isVisible) {
-    return null;
-  }
-
-  const currentConfig = SLIDES[currentSlide];
+  // Parallax: image drifts up slower than the page scroll
+  const y = useTransform(scrollY, [0, 600], [0, -80]);
+  const scale = useTransform(scrollY, [0, 600], [1, 1.04]);
+  const opacity = useTransform(scrollY, [0, 400], [1, 0]);
 
   return (
-    <div className="absolute top-0 right-0 w-full md:w-[50%] lg:w-[45%] h-full pointer-events-auto z-10 hidden md:block">
-      <Canvas camera={{ 
-        position: currentConfig.camera.position, 
-        fov: currentConfig.camera.fov 
-      }}>
-        <React.Suspense fallback={null}>
-          <PresentationControls
-            snap={false}
-            rotation={[0.05, -Math.PI / 5, 0]}
-            polar={[-Math.PI / 4, Math.PI / 4]}
-            azimuth={[-Math.PI, Math.PI]}
-            enabled={false} // Disable user interaction during full page transitions
-          >
-            <AnimatedPcModel />
-          </PresentationControls>
-        </React.Suspense>
-      </Canvas>
+    <div
+      ref={containerRef}
+      className="absolute top-0 right-0 w-full md:w-[52%] lg:w-[48%] h-full pointer-events-none z-10 hidden md:flex items-center justify-end overflow-hidden"
+    >
+      {/* Atmospheric fade gradient on the left edge so it blends into the dark bg */}
+      <div className="absolute inset-y-0 left-0 w-[45%] z-10 bg-gradient-to-r from-background via-background/70 to-transparent pointer-events-none" />
+
+      {/* Subtle top vignette */}
+      <div className="absolute top-0 inset-x-0 h-[20%] z-10 bg-gradient-to-b from-background to-transparent pointer-events-none" />
+
+      {/* Bottom fade */}
+      <div className="absolute bottom-0 inset-x-0 h-[28%] z-10 bg-gradient-to-t from-background via-background/60 to-transparent pointer-events-none" />
+
+      {/* Warm studio light bloom — sits behind the PC image */}
+      <motion.div
+        style={{ opacity }}
+        className="absolute right-[8%] top-[15%] w-[340px] h-[340px] rounded-full pointer-events-none z-0"
+        style={{
+          background:
+            "radial-gradient(ellipse at center, rgba(200,160,100,0.10) 0%, rgba(160,120,70,0.06) 40%, transparent 75%)",
+          filter: "blur(40px)",
+        }}
+      />
+
+      {/* The PC image with parallax */}
+      <motion.div
+        style={{ y, scale }}
+        className="relative w-[88%] max-w-[620px] h-auto mr-[2%] mt-[4%] z-[5]"
+      >
+        <Image
+          src="/hero-pc.png"
+          alt="Premium ASMBLY workstation with oak wood accents"
+          width={1024}
+          height={1024}
+          priority
+          quality={100}
+          className="w-full h-auto object-contain select-none"
+          style={{
+            filter: "drop-shadow(0 32px 64px rgba(0,0,0,0.7)) drop-shadow(0 8px 24px rgba(0,0,0,0.5))",
+          }}
+        />
+
+        {/* Reflection / floor shadow */}
+        <div
+          className="absolute bottom-0 left-[10%] right-[10%] h-[60px] pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, rgba(0,0,0,0.45) 0%, transparent 72%)",
+            filter: "blur(18px)",
+            transform: "translateY(30%)",
+          }}
+        />
+      </motion.div>
     </div>
   );
 }

@@ -49,8 +49,19 @@ html {
     color: var(--color-foreground);
     overflow-x: hidden; /* Global horizontal lock */
     overscroll-behavior: none;
+    scroll-behavior: smooth;
     @apply font-sans text-base leading-relaxed;
     @apply selection:bg-silver/20 selection:text-platinum;
+  }
+
+  /* GPU layer promotion for all scroll-animated elements */
+  .distortion-target {
+    will-change: transform, opacity;
+  }
+
+  /* Layout isolation per section — prevents offscreen sections from affecting paint */
+  .slide-section {
+    contain: layout paint;
   }
 
   ::-webkit-scrollbar { width: 2px; }
