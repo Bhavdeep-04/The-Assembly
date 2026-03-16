@@ -20,6 +20,9 @@ const ProductSchema = new mongoose.Schema({
   image: { type: String },
   specs: { type: mongoose.Schema.Types.Mixed, required: true },
   description: { type: String, required: true },
+  amazonUrl: { type: String },
+  flipkartUrl: { type: String },
+  available: { type: Boolean, default: true },
 });
 
 const ProductModel = mongoose.models.Product || mongoose.model('Product', ProductSchema);

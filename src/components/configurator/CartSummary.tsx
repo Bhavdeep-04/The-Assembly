@@ -2,7 +2,7 @@
 
 import { useCartStore } from "@/store/useCartStore";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trash2, ShoppingCart, ArrowRight, CheckCircle2, CircleDashed } from "lucide-react";
+import { Trash2, ShoppingCart, ArrowRight, CheckCircle2, CircleDashed, ExternalLink } from "lucide-react";
 import { Button } from "../ui/Button";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -176,7 +176,7 @@ export function CartSummary() {
                 exit={{ opacity: 0, x: -20 }}
                 className="flex items-center justify-between p-3 rounded-lg bg-surface border border-white/5 group"
               >
-                <div className="flex flex-col flex-1 min-w-0 pr-4">
+                <div className="flex flex-col flex-1 min-w-0 pr-2">
                   <span className="text-xs text-primary font-medium tracking-wider uppercase mb-1 drop-shadow-[0_0_8px_rgba(0,240,255,0.5)]">
                     {item.category}
                   </span>
@@ -187,12 +187,27 @@ export function CartSummary() {
                     ₹{item.price.toLocaleString('en-IN')} {item.quantity > 1 && `x${item.quantity}`}
                   </span>
                 </div>
-                <button
-                  onClick={() => removeItem(item.id)}
-                  className="p-2 mr-[-8px] text-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all rounded-md hover:bg-red-500/10"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
+                <div className="flex items-center gap-1 shrink-0">
+                  {/* Amazon link icon */}
+                  {item.amazonUrl && (
+                    <a
+                      href={item.amazonUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Buy on Amazon"
+                      className="p-2 text-[#FF9900]/60 hover:text-[#FF9900] opacity-0 group-hover:opacity-100 transition-all rounded-md hover:bg-[#FF9900]/10"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+                  {/* Remove button */}
+                  <button
+                    onClick={() => removeItem(item.id)}
+                    className="p-2 mr-[-8px] text-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all rounded-md hover:bg-red-500/10"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </motion.div>
             ))
           )}
